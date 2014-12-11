@@ -8,6 +8,8 @@
 ;;;  into prefix form. (It's worth noting that the actual expression
 ;;;  from the online text is kind of hard to read because it uses a
 ;;;  low-resolution image. I'm pretty sure those are '4's, anyway.)
+;;;  EDIT: My hard-copy of the book arrived today, so can confirm that
+;;;  those are indeed '4's.
 
 (/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5)))))
    (* 3 (- 6 2) (- 2 7)))
