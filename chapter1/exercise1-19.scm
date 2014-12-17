@@ -35,7 +35,7 @@
 ;                   = ( (bp+aq)q + (bq+aq+ap)q + (bq+aq+ap)p, (bp+aq)p + (bq+aq+ap)q )
 ;                   = ( bpq+aqq + bqq+aqq+apq + bqp+aqp+app, bpp+aqp + bqq+aqq+apq )
 ;                   = ( b(pq+qq+qp) + a(qq+pq+qp) + a(qq+pp), b(pp+qq) + a(qp+qq+pq) )
-;                   = ( b(q^2 + 2pq) + a(q^2 + 2pq) + a(p^2 + q^2), b(p^2 + q^2) + (q^2 + 2pq) )
+;                   = ( b(q^2 + 2pq) + a(q^2 + 2pq) + a(p^2 + q^2), b(p^2 + q^2) + a(q^2 + 2pq) )
 
 ; Now let p' = p^2 + q^2, and q' = q^2 + 2pq.
 ; Then we have that:
