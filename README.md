@@ -7,4 +7,4 @@ These are my solutions to the exercises (and eventually, perhaps the additional 
 
 (The online text is available at http://mitpress.mit.edu/sicp/full-text/book/book.html)
 
-The programming environment that I'm using for the exercises is the DrRacket integrated development environment (http://racket-lang.org/) with the R5RS Scheme standard.
+The programming environment that I'm using for the exercises is the DrRacket integrated development environment (http://racket-lang.org/), together with Neil Van Dyke's SICP support package (http://www.neilvandyke.org/racket-sicp/). 
