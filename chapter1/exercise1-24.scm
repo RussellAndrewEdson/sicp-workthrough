@@ -78,8 +78,8 @@
 
 ; Though this doesn't appear to be the case in the data, where there
 ; is a striking similarity between the amounts of times across the board.
-; Even numbers near 1,000,000 seem to be found in roughly the same amount
-; of time:
+; Even numbers near 1,000,000,000 seem to be found in roughly the same
+; amount of time:
 
 (timed-prime-test 1000000033)
 ;> 1000000033 *** 292
