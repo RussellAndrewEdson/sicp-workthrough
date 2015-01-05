@@ -73,8 +73,8 @@
 
 (define (golden-ratio-approximation)
   (define (within-4dp? result)
-  (< (abs (- golden-ratio-reciprocol result))
-     0.00005))
+    (< (abs (- golden-ratio-reciprocol result))
+       0.00005))
   (define (approx-iter k)
     (let ((k-term (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) k)))
       (print-result k k-term)
