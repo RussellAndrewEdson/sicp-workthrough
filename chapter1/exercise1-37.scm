@@ -5,7 +5,7 @@
 ;;; For this exercise, we createsd a procedure to compute the value
 ;;; of a k-term finite continued fraction given procedures n and d
 ;;; that generate the individual terms. We then used the procedure to
-;;; approximate the reciprocol of the golden ratio.
+;;; approximate the reciprocal of the golden ratio.
 
 
 ; So we want a procedure to generate the truncated continued fraction.
@@ -52,13 +52,13 @@
 ; Sure enough, our procedure seems correct!
 
 
-; So let's use this procedure to approximate the reciprocol of
+; So let's use this procedure to approximate the reciprocal of
 ; the golden ratio to 4 decimal places.
 
 ; Recall that the golden ratio is (1+ sqrt(5))/2, so the
-; reciprocol is just this fraction flipped.
+; reciprocal is just this fraction flipped.
 
-(define golden-ratio-reciprocol (/ 2 (+ 1 (sqrt 5))))
+(define golden-ratio-reciprocal (/ 2 (+ 1 (sqrt 5))))
 ;> 0.6180339887498948
 
 
@@ -74,7 +74,7 @@
 
 (define (golden-ratio-approximation)
   (define (within-4dp? result)
-    (< (abs (- golden-ratio-reciprocol result))
+    (< (abs (- golden-ratio-reciprocal result))
        0.00005))
   (define (approx-iter k)
     (let ((k-term (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) k)))
@@ -99,7 +99,7 @@
 ;> 10  0.6179775280898876
 ;> 11  0.6180555555555556
 
-; So the 11-term approximates the reciprocol of the golden ratio
+; So the 11-term approximates the reciprocal of the golden ratio
 ; to 4 decimal places.
 
 
