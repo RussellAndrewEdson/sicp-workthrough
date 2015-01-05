@@ -52,10 +52,11 @@
 ; Sure enough, our procedure seems correct!
 
 
-; So let's use this procedure to approximate the golden ratio
-; to 4 decimal places.
+; So let's use this procedure to approximate the reciprocol of
+; the golden ratio to 4 decimal places.
 
-; Recall that the golden ratio is (1+ sqrt(5))/2:
+; Recall that the golden ratio is (1+ sqrt(5))/2, so the
+; reciprocol is just this fraction flipped.
 
 (define golden-ratio-reciprocol (/ 2 (+ 1 (sqrt 5))))
 ;> 0.6180339887498948
