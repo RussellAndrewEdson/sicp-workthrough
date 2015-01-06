@@ -31,7 +31,7 @@
         (frac-iter n
                    d
                    (- count 1)
-                   (/ (n k) (+ (d k) frac)))))
+                   (/ (n count) (+ (d count) frac)))))
   (frac-iter n d k 0))
 
 
@@ -107,9 +107,9 @@
 
 (define (cont-frac-recursive n d k)
   (define (next-term count)
-    (cond ((= count k) (/ (n k) (d k)))
-          (else (/ (n k)
-                   (+ (d k) (next-term (+ count 1)))))))
+    (cond ((= count k) (/ (n count) (d count)))
+          (else (/ (n count)
+                   (+ (d count) (next-term (+ count 1)))))))
   (next-term 1))
 
 ; Note the delayed operations here, which will give us our recursive
