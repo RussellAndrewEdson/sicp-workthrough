@@ -2,7 +2,7 @@
 ;;; (The online text can be found at 
 ;;;     http://mitpress.mit.edu/sicp/full-text/book/book.html)
 ;;;
-;;; For this exercise, we createsd a procedure to compute the value
+;;; For this exercise, we created a procedure to compute the value
 ;;; of a k-term finite continued fraction given procedures n and d
 ;;; that generate the individual terms. We then used the procedure to
 ;;; approximate the reciprocal of the golden ratio.
