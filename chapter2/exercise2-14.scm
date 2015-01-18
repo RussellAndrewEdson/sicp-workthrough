@@ -81,8 +81,8 @@
                   (add-interval (div-interval one r1)
                                 (div-interval one r2)))))
 
-; Let's test (20-ohm 5%) and (100-ohm 1%):
 
+; Let's test (20-ohm 1%) and (100-ohm 5%) as a couple of easy intervals:
 (define interval-a (make-center-percent 20 1))
 (define interval-b (make-center-percent 100 5))
 
@@ -98,12 +98,12 @@
 
 
 ; Let's try (interval-a / interval-a) and (interval-a / interval-b):
-
 (print-interval (div-interval interval-a interval-a))
 ;> 1.0002000200020003 1.9998000199979908%
 
 (print-interval (div-interval interval-a interval-b))
 ;> 0.2006015037593985 5.997001499250372%
+
 
 ; So we start to get an idea of what is going on with our par1 and par2
 ; procedures above. Look at our (interval-a / interval-a) calculation.
@@ -111,8 +111,8 @@
 ; dividing the interval by itself should give us 1.0 with a 0% error, right?
 
 ; But that's not what happens. Recall that the entire interval arithmetic 
-; system was defined in terms of minimum and maximum values. So whereas in
-; an expression like A/A we expect to represent the same value, the system 
+; system was defined in terms of minimum and maximum values. So whereas we
+; expect an expression like A/A to represent the same value A, the system 
 ; actually considers how "far apart" it can pick the values in the interval,
 ; and then returns us -this- as an answer instead.
 
