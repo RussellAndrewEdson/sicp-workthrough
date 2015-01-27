@@ -9,7 +9,7 @@
 
 ; The graph was much too big and complicated to look good here in text form,
 ; so I've drawn it up (admittedly it's rather crude) and scanned it in 
-; a separate file (see exercise1-14_tree.pdf).
+; a separate file (see exercise1-14_tree.png).
 
 
 ; Hopefully the drawing over in the other file will kind of aid the following
