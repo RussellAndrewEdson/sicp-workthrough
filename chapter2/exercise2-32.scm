@@ -20,7 +20,7 @@
 ;   We start with the empty set (), as always. We add it to our subset list.
 ;   Let S denote the set of elements we're looking at, eg. S = (1 2 3).
 ;
-;   1. We start at the back of the (rest of the) set S, and select that element.
+;   1. We start at the back of the set S, and select that element.
 ;   2. Then we iterate through our list of subsets, adding this element to
 ;      each of them to create new subsets -- which we append to the list.
 ;   3. We then remove that element from S, and repeat the process until we've
