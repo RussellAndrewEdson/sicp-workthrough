@@ -16,12 +16,15 @@
 ;   (() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))
 
 ; This immediately gives us a hint at what might be going on. As we
-; add subsets from left to right, it seems like we:
-;   1. We start with the empty set (), as always.
-;   2. Start at the back of the (rest of the) set, and consider that element.
-;   3. Then we iterate through our list of subsets, adding this element to
-;      each of those sets to create new subsets, which we append to the list.
-;   4. We repeat this process until we've exhausted all elements.
+; add subsets from left to right, it seems like we're doing the following:
+;   We start with the empty set (), as always. We add it to our subset list.
+;   Let S denote the set of elements we're looking at, eg. S = (1 2 3).
+;
+;   1. We start at the back of the (rest of the) set S, and select that element.
+;   2. Then we iterate through our list of subsets, adding this element to
+;      each of them to create new subsets -- which we append to the list.
+;   3. We then remove that element from S, and repeat the process until we've
+;      exhausted all of the elements.
 
 
 ; And if we look at the partial procedure definition that is given to us, 
