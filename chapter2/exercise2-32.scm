@@ -26,6 +26,11 @@
 ;   3. We then remove that element from S, and repeat the process until we've
 ;      exhausted all of the elements.
 
+; So our subset list evolves in the following way:
+;   (() )
+;   (() ) + ((3))
+;   (() (3)) + ((2) (2 3))
+;   (() (3) (2) (2 3)) + ((1) (1 3) (2 3) (1 2 3))
 
 ; And if we look at the partial procedure definition that is given to us, 
 ; this appears to be exactly what's happening:
