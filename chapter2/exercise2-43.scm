@@ -73,8 +73,8 @@
 ; nesting order, and the other that uses the new (slower?) order.
 ; 
 ; Now if swapping the order is going to have any effect on the
-; speed, our first suspect should be that recusrive call to the
-; queen-cols procedure, and when exactly it gets called with respect
+; speed, our first suspect should be that recursive call to the
+; queen-cols procedure, and the points where it gets called with respect
 ; to the flatmap procedure. So we'll add some display statements in there
 ; so we can see what's happening, too. 
 
