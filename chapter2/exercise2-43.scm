@@ -9,7 +9,7 @@
 ; As given, we have two different orders for the nested mappings, where 
 ; one apparently runs much slower than the other. So we'll bring in all
 ; of the ancillary procedure definitions for the n-queens puzzle from 
-; the last exercise (note that we're signaling for a call to flatmap
+; the last exercise (note that we're signaling when we evaluate flatmap
 ; in the output -- this will be useful for testing purposes.)
 
 (define (enumerate-interval low high)
@@ -18,7 +18,7 @@
       (cons low (enumerate-interval (+ low 1) high))))
 
 (define (flatmap proc seq)
-  (display "flatmap called")
+  (display "flatmap evaluated")
   (newline)
   (accumulate append nil (map proc seq)))
 
@@ -80,7 +80,7 @@
 
 (define (queens-fast board-size)
   (define (queen-cols k)
-    (display "queen-cols called with k=")
+    (display "queen-cols evaluated with k=")
     (display k)
     (newline)
     (if (= k 0)
@@ -97,7 +97,7 @@
 
 (define (queens-slow board-size)
   (define (queen-cols k)
-    (display "queen-cols called with k=")
+    (display "queen-cols evaluated with k=")
     (display k)
     (newline)
     (if (= k 0)
@@ -119,107 +119,108 @@
 ; output won't get cluttered.)
 
 ; Calling queens-fast with a board-size of 2 gives us the following
-; call stack:
+; call/evaluation stack:
 
 (queens-fast 2)
-;> queen-cols called with k=2
-;> queen-cols called with k=1
-;> queen-cols called with k=0
-;> flatmap called
-;> flatmap called
+;> queen-cols evaluated with k=2
+;> queen-cols evaluated with k=1
+;> queen-cols evaluated with k=0
+;> flatmap evaluated
+;> flatmap evaluated
 ;> '()
 
 ; And for the board-size of 3, we have the following:
 
 (queens-fast 3)
-;> queen-cols called with k=3
-;> queen-cols called with k=2
-;> queen-cols called with k=1
-;> queen-cols called with k=0
-;> flatmap called
-;> flatmap called
-;> flatmap called
+;> queen-cols evaluated with k=3
+;> queen-cols evaluated with k=2
+;> queen-cols evaluated with k=1
+;> queen-cols evaluated with k=0
+;> flatmap evaluated
+;> flatmap evaluated
+;> flatmap evaluated
 ;> '()
 
 ; So far, so good -- we have a nice direct proportionality between
 ; the board-size and the number of calls that are made to the queen-cols
 ; procedure here. Also notice that recursion has completed fully before
-; we actually make any calls to the flatmap procedure.
+; we actually make any evaluations of the flatmap procedure.
 
 
 ; But let's check the slower procedure now:
 
 (queens-slow 2)
-;> queen-cols called with k=2
-;> flatmap called
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
+;> queen-cols evaluated with k=2
+;> flatmap evaluated
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
 ;> '()
 
 
-; Uh-oh! What about for a board-size of 3?
-; (You'll want to be scrolling down quite a bit for this one.)
+; Uh-oh! We seem to have quite a few more evaluations than
+; we expected here. What about for a board-size of 3?
+; (Hint: You'll want to be scrolling down quite a bit for this one.)
 
 (queens-slow 3)
-;> queen-cols called with k=3
-;> flatmap called
-;> queen-cols called with k=2
-;> flatmap called
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=2
-;> flatmap called
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=2
-;> flatmap called
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=1
-;> flatmap called
-;> queen-cols called with k=0
-;> queen-cols called with k=0
-;> queen-cols called with k=0
+;> queen-cols evaluated with k=3
+;> flatmap evaluated
+;> queen-cols evaluated with k=2
+;> flatmap evaluated
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=2
+;> flatmap evaluated
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=2
+;> flatmap evaluated
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=1
+;> flatmap evaluated
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
+;> queen-cols evaluated with k=0
 ;> '()
 
 ; Wow. No wonder this second nesting makes the program run slower!
@@ -232,7 +233,7 @@
 ;   - 9  calls to (queen-cols 1)
 ;   - 27 calls to (queen-cols 0).
 
-; By including the calls to flatmap in the display output, we can get a
+; By including the evaluations of flatmap in the display output, we can get a
 ; feel for why this is happening. Recall our substitution model -- we only 
 ; determine the value of that outer lambda expression when its actually applied.
 ; In our case here, we're not actually determining the values for 
