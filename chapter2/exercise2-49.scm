@@ -40,17 +40,18 @@
 ; So first, we want to define a painter that draws the outline of
 ; the designated frame. 
 ;
-; Recall that we represent an image inside the [0,1)x[0,1) unit
-; square. Note that 1.0 isn't actually included within our region!
-; So we'll represent those edges of the frame with a sufficiently
-; close value, like 0.99, instead.
+; Recall that we represent an image inside the [0,1]x[0,1] unit
+; square. Now if we represent an edge with a 1.0 coordinate value
+; we won't actually be able to see it. So we'll represent those 
+; edges of the frame with a sufficiently close value, like 0.99, 
+; instead.
 ; 
 ;    (0, 0.99) --------------- (0.99, 0.99)
 ;              |             |
 ;              |             |
 ;       (0, 0) --------------- (0.99, 0)
 
-; So we'll define some constants for readability:
+; We'll define some constants for readability:
 
 (define ymax 0.99)
 (define ymin 0.0)
@@ -58,15 +59,15 @@
 (define xmin 0.0)
 
 
-; Then our line segments for the original image are:
+; Then our line segments for the outline are:
 ;   - the line segment from (xmin, ymin) to (xmin, ymax)
 ;   - the line segment from (xmin, ymax) to (xmax, ymax)
 ;   - the line segment from (xmax, ymax) to (xmax, ymin)
 ;   - the line segment from (xmax, ymin) to (xmin, ymin)
 ;
-; (The order and direction of the segments doesn't matter, though.)
+; (The order and direction of the segments doesn't matter.)
 
-; So we can make these into 'top', 'left', 'right', 'bottom' segments:
+; So we can make these into 'top', 'left', 'right', 'bottom' segments.
 
 (define top (make-segment (make-vect xmin ymax)
                           (make-vect xmax ymax)))
@@ -77,7 +78,7 @@
 (define bottom (make-segment (make-vect xmin ymin)
                              (make-vect xmax ymin)))
 
-; So we'll write this up as a painter procedure:
+; We'll write this up as a painter procedure, as follows.
 
 (define outline (segments->painter 
                  (list top left right bottom)))
