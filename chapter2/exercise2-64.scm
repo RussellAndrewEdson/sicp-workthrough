@@ -106,13 +106,12 @@
 ; before, there are log_2(n) divisions required.
 
 ; However, we do this for both the left and right branches of the tree,
-; so we have about 2*log_2(n) divisions all up.
+; for all levels of the tree. So we have about 2^log_2(n) divisions all up,
+; which evens out to about n divisions. 
 
 ; Since dividing the list is all our algorithm is really doing at any point
 ; (there's nothing too special about our make-tree procedure, so the only
 ; thing that affects the number of steps we do is the number of divisions
-; we need to make), then we can say that we have approximately 2*log_2(n)
-; steps.
+; we need to make), then we can say that we have approximately n steps.
 
-; That gives us an order of growth of Theta(log(n)), which is typical of
-; algorithms involving binary trees.
+; That gives us an order of growth of Theta(n).
