@@ -280,19 +280,7 @@
 ;    (put 'deriv '** exponential-derivative)
 ; should now be
 ;    (put '** 'deriv exponential-derivative)
-
-
-; (It is worth noting though that if we adhere strictly to the
-; "operations on the rows, types across the columns" convention for
-; the table as set out in the book, then this new form for the table 
-; suggests that we have the operations '+' and '*' that we want to 
-; work on a derivative type 'deriv, which doesn't really make sense 
-; with the way we've written the program. 
 ;
-; In fact, given two "derivative" objects f' and g', you would 
-; just add or multply them together in the obvious way:
-;   - Adding f' to g' gives us f' + g',
-;   - Multiplying f' by g' gives us f' * g'.
-;
-; So the new system that made proper sense with this rearranged
-; table would be quite boring indeed.)
+; And this is fine (the choice of "operations on the rows, types
+; across the columns" was an arbitrary one, after all. We're free to
+; swap that around all we like.)
