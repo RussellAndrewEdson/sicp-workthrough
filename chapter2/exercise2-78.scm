@@ -223,7 +223,7 @@
 
 (install-scheme-number-package)
 (define (make-scheme-number n)
-  ((get 'make 'scheme-number) n ))
+  ((get 'make 'scheme-number) n))
 
 
 ; Now basically we want to redefine the 'attach-tag',
