@@ -21,10 +21,10 @@
 (define (make-rational n d)
   (cons 'rational (cons n d)))
 
-(define (numerator q)
+(define (numer q)
   (car q))
 
-(define (denominator q)
+(define (denom q)
   (cdr q))
 
 ; Real type:
@@ -59,7 +59,7 @@
 ; Next, the easiest way to raise a rational up one level to a real
 ; number is to actually perform the numerator/demoninator division:
 (define (raise-rational q)
-  (make-real (/ (numerator q) (denominator q))))
+  (make-real (/ (numer q) (denom q))))
 
 ; Finally, to raise a real number to a complex number, we simply
 ; pass the value of the real number in for the 'real-part', and use
