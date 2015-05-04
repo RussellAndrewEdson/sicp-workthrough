@@ -299,5 +299,5 @@
 
 ; (Of course, this is a non-trivial problem to solve. The naive answer would
 ; be to modify the apply-generic procedure even more so that we try to
-; coerce the arguments into every possible one of the n! permutations, which
+; coerce the arguments into every possible one of the n^n permutations, which
 ; would then make our arithmetic system prohibitively inefficient.)
