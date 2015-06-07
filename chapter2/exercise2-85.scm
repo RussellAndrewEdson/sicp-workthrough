@@ -235,17 +235,24 @@
 ; And that's it! Then for our apply-generic procedure, we simply
 ; drop the result after we've calculated it (possibly with successive
 ; raising.) 
+;
+; One thing that we have to watch out for here is that we can loop 
+; forever if we attempt to drop on a raise operation. So we
+; should check for those first.
 
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
     (if (same-level? type-tags)
         (let ((proc (get op type-tags)))
           (if proc
-              (apply proc (map contents args))
+              (let ((result (apply proc (map contents args))))
+                (if (eq? op 'raise)
+                    result
+                    (drop result)))
               (error
                "No method for these types -- APPLY-GENERIC"
                (list op type-tags))))      
-        (drop (apply apply-generic op (raise-all-to-highest-level args))))))
+        (apply apply-generic op (raise-all-to-highest-level args)))))
 
 
 ; We can test this in a similar way to how we tested the code at the end
