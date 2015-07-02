@@ -1,14 +1,19 @@
-;;; SICP Exercise 2.85
+;;; SICP Exercise 2.86
 ;;; (The online text can be found at 
 ;;;     http://mitpress.mit.edu/sicp/full-text/book/book.html)
 ;;;
-;;; For this exercise, we designed a 'drop' procedure to coerce
-;;; our numeric types down the tower, and updated the apply-generic
-;;; procedure to simplify its results.
+;;; For this exercise, we modified our arithmetic system to handle
+;;; complex numbers whose real/imag and mag/ang parts can be other
+;;; types of numbers.
 
 
-; We'll bring in all of the numeric tower code we have so far (without
-; the apply-generic procedure, which we'll define later):
+; To avoid overcomplicating things, we'll still suppose that complex
+; numbers are always created in rectangular form (the polar form
+; implementation would work the same way, but the code for this system
+; is already getting pretty long and unwieldy as it is! So for the
+; purposes of brevity, we won't worry about it.)
+
+; So our numeric tower code from Exercise 2.85 is included as follows:
 
 ; Integer type:
 (define (make-integer n)
@@ -36,10 +41,10 @@
 (define (make-complex x y)
   (cons 'complex (cons x y)))
 
-(define (real-part z)
+(define (real-part-r z)
   (car z))
 
-(define (imag-part z)
+(define (imag-part-r z)
   (cdr z))
 
 (define (raise-integer n)
@@ -52,7 +57,7 @@
   (make-complex (real-value x) 0))
 
 (define (type-tag datum)
-  (cond ((number? datum) 'scheme-number)
+  (cond ((number? datum) 'real)
         ((pair? datum) (car datum))
         (else (error "Bag tagged datum -- TYPE-TAG" datum))))
 
@@ -131,17 +136,6 @@
       (map (lambda (arg) (raise-to-level arg highest-tower-level))
            args))))
 
-
-; Now as hinted in the book, we'll create our 'drop' procedure by defining
-; a 'project' procedure that lowers a given type one level if possible 
-; (ie. complex->real->rational->integer). We then use the project procedure
-; on a given number, followed by the raise procedure; if we get the same
-; number back afterward, then we didn't lose any information during the
-; projection, and so it's safe to "drop" down to the lower level.
-;
-; So first, we'll need our generic equality predicate. We can pretty much
-; use the same style as the one we had in Exercise 2.79:
-
 (define (equ? x y) (apply-generic 'equ? x y))
 
 (define (equ-integer? n1 n2)
@@ -155,52 +149,22 @@
   (= (real-value x1) (real-value x2)))
 
 (define (equ-complex? z1 z2)
-  (and (= (real-part z1) (real-part z2))
-       (= (imag-part z1) (imag-part z2))))
+  (and (= (real-part-r z1) (real-part-r z2))
+       (= (imag-part-r z1) (imag-part-r z2))))
 
 (put 'equ? '(integer integer) equ-integer?)
 (put 'equ? '(rational rational) equ-rational?)
 (put 'equ? '(real real) equ-real?)
 (put 'equ? '(complex complex) equ-complex?)
 
-
-; Now we need to decide how we'll project the different number types
-; down the tower.
-
-; As given in the book, we can project a complex number to a real number
-; by dropping the imaginary part:
-
 (define (project-complex z)
-  (make-real (real-part z)))
-
-; Now as for projecting a real number, there's no easy way to project a
-; real number to a rational number. (Well, this isn't technically true:
-; since we're dealing with finite precision arithmetic, a sure-fire way
-; to convert a "real number" to a rational one would be to multiply by a
-; power of 10 sufficient to get rid of any non-zero decimal point values,
-; and then construct a rational using the remaining integer as the
-; numerator and the power of 10 as the denominator. The problem with this
-; though is that it truly is sure-fire -- no information could ever be
-; lost in this conversion, and so under this system every real number would
-; be safely dropped to a rational, which kind of defeats the purpose of having
-; the real numbers and the rational numbers as separate levels in our numeric 
-; tower. [We'd never get a real number as a result from apply-generic, since 
-; we could always drop it to a rational.])
-;
-; So instead, we'll just go ahead and project a given real number straight to
-; an integer. The book suggests using the round procedure for this task:
+  (make-real (real-part-r z)))
 
 (define (project-real x)
   (make-integer (round x)))
 
-; And for a given rational, we can use this same idea: We'll perform the
-; implied division, and then round the result.
-
 (define (project-rational q)
   (make-integer (round (/ (numer q) (denom q)))))
-
-; So we can add these projection operations to the table and define the
-; generic project procedure like this:
 
 (define (project num)
   (apply-generic 'project num))
@@ -208,17 +172,6 @@
 (put 'project '(complex) project-complex)
 (put 'project '(real) project-real)
 (put 'project '(rational) project-rational)
-
-
-; With those procedures defined, we can write our drop procedure.
-; The procedure simply takes a number, and recursively lowers
-; it one level as long as the projection doesn't lose information.
-;
-; We define the ancillary 'can-drop?' procedure to determine when
-; this is the case. Note that we immediately return false if given
-; an integer, or if we don't have one of our numeric types (which we
-; can check with the 'pair?' procedure -- this allows us to use the
-; 'equ?' operation with apply-generic, without any problems.)
 
 (define (can-drop? num)
   (cond ((not (pair? num)) false)
@@ -230,15 +183,6 @@
   (if (can-drop? num)
       (drop (project num))
       num))
-
-
-; And that's it! Then for our apply-generic procedure, we simply
-; drop the result after we've calculated it (possibly with successive
-; raising.) 
-;
-; One thing that we have to watch out for here is that we can loop 
-; forever if we attempt to drop on a raise operation. So we
-; should check for those first.
 
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
@@ -255,35 +199,131 @@
         (apply apply-generic op (raise-all-to-highest-level args)))))
 
 
-; We can test this in a similar way to how we tested the code at the end
-; of Exercise 2.84:
+; Now for our complex number type, we need the additional selectors
+; for the magnitude and angle, which are defined in terms of squares,
+; square roots and arctangents. (For the polar form case, we'd also
+; need to consider sines and cosines as well.)
+;
+; So first off, we need to define some generic procedures to perform
+; those operations. We'll also bring in the usual add/sub/mul/div
+; operations too:
 
-(define (add x y z)
-  (apply-generic 'add x y z))
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (square x) (apply-generic 'square x))
+(define (square-root x) (apply-generic 'square-root x))
+(define (arctangent x y) (apply-generic 'arctangent x y))
 
-(put 'add '(real real real) 
-     (lambda (x y z)
-       (make-real (+ (real-value x)
-                     (real-value y)
-                     (real-value z)))))
+; Then we can define our complex number selectors 'magnitude' and
+; 'angle' in terms of these operations.
 
-(put 'add '(complex complex complex)
-     (lambda (x y z)
-       (make-complex 
-        (+ (real-part x) (real-part y) (real-part z))
-        (+ (imag-part x) (imag-part y) (imag-part z)))))
+(define (magnitude z)
+  (square-root (add (square (real-part z))
+                    (square (imag-part z)))))
 
-(define num-1 (make-integer 1))
-(define num-2 (make-rational 1 2))
-(define num-3 (make-real 0.5))
-(define num-4 (make-real 3.1415))
-(define num-5 (make-complex 3 0))
+(define (angle z)
+  (arctangent (imag-part z) (real-part z)))
 
-(add num-1 num-2 num-3)
-;> (integer . 2.0)
+; And this will work just fine when we actually implement the needed
+; operations for the integer, rational and real types (which would
+; be done in the respective type packages.)
 
-(add num-2 num-3 num-5)
-;> (integer . 4.0)
+(put 'add '(integer integer)
+     (lambda (m n)
+       (make-integer (+ (integral-value m) (integral-value n)))))
 
-(add num-2 num-4 num-5)
-;> (real . 6.641500000000001)
+(put 'add '(rational rational)
+     (lambda (p q)
+       (make-rational (+ (* (numer p) (denom q))
+                         (* (numer q) (denom p)))
+                      (* (denom p) (denom q)))))
+
+(put 'add '(real real)
+     (lambda (x y)
+       (make-real (+ (real-value x) (real-value y)))))
+
+(put 'real-part '(complex) (lambda (z) (real-part-r z)))
+
+(put 'imag-part '(complex) (lambda (z) (imag-part-r z)))
+
+(put 'square '(integer)
+     (lambda (n)
+       (make-integer (* (integral-value n) (integral-value n)))))
+
+(put 'square '(rational)
+     (lambda (q)
+       (make-rational (* (numer q) (numer q))
+                      (* (denom q) (denom q)))))
+
+(put 'square '(real)
+     (lambda (x)
+       (make-real (* (real-value x) (real-value x)))))
+
+; Note that the square-root operation isn't closed over the set
+; of integers and rationals -- we may end up with a real number
+; result instead, so we simply create one right off the bat.
+; (Our 'drop' functionality from the previous exercise will 
+; simplify the type if possible.)
+
+(put 'square-root '(integer)
+     (lambda (n)
+       (make-real (sqrt (integral-value n)))))
+
+(put 'square-root '(rational)
+     (lambda (q)
+       (make-real (sqrt (/ (numer q) (denom q))))))
+
+(put 'square-root '(real)
+     (lambda (x)
+       (make-real (sqrt (real-value x)))))
+
+; Similarly, the arctangent will likely be a real number in
+; most cases, so we'll return only real numbers -- if we happen
+; to get an integer, then it will be simplified with the 'drop'
+; procedure.
+
+(put 'arctangent '(integer integer)
+     (lambda (m n)
+       (make-real (atan (integral-value m) (integral-value n)))))
+
+(put 'arctangent '(rational rational)
+     (lambda (p q)
+       (make-real (atan (/ (numer p) (denom p))
+                        (/ (numer q) (denom q))))))
+
+(put 'arctangent '(real real)
+     (lambda (x y)
+       (make-real (atan (real-value x) (real-value y)))))
+
+
+; And we're done! We can test the (rectangular form) complex number
+; selectors as follows.
+
+(define c1 (make-complex (make-integer 1) (make-integer 0)))
+(define c2 (make-complex (make-rational 1 2) (make-rational 1 2)))
+(define c3 (make-complex (make-real 1) (make-rational 1 1)))
+
+(display (magnitude c1))
+;> (integer . 1)
+
+(display (angle c1))
+;> (integer . 0)
+
+(display (imag-part c2))
+;> (rational 1 . 2)
+
+(display (angle c2))
+;> (real . 0.7853981633974483)
+
+(display (real-part c3))
+;> (integer . 1)
+
+(display (angle c3))
+;> (real . 0.7853981633974483)
+ 
+; The polar form, with the sine and cosine generic procedures, is 
+; implemented in much the same way.
