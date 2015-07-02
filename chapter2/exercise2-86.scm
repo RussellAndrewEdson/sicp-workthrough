@@ -307,22 +307,22 @@
 (define c2 (make-complex (make-rational 1 2) (make-rational 1 2)))
 (define c3 (make-complex (make-real 1) (make-rational 1 1)))
 
-(display (magnitude c1))
+(magnitude c1)
 ;> (integer . 1)
 
-(display (angle c1))
+(angle c1)
 ;> (integer . 0)
 
-(display (imag-part c2))
+(imag-part c2)
 ;> (rational 1 . 2)
 
-(display (angle c2))
+(angle c2)
 ;> (real . 0.7853981633974483)
 
-(display (real-part c3))
+(real-part c3)
 ;> (integer . 1)
 
-(display (angle c3))
+(angle c3)
 ;> (real . 0.7853981633974483)
  
 ; The polar form, with the sine and cosine generic procedures, is 
